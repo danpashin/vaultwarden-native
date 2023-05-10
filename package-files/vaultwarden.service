@@ -1,0 +1,31 @@
+[Unit]
+Description=Bitwarden Server (Rust Edition)
+Documentation=https://github.com/dani-garcia/vaultwarden
+After=network.target
+
+# MariaDB
+# After=network.target mariadb.service
+# Requires=mariadb.service
+
+# Mysql
+# After=network.target mysqld.service
+# Requires=mysqld.service
+
+# PostgreSQL
+# After=network.target postgresql.service
+# Requires=postgresql.service
+
+
+[Service]
+User=vaultwarden
+Group=vaultwarden
+EnvironmentFile=/etc/vaultwarden/.env
+ExecStartPre=+/bin/mkdir -p /var/lib/vaultwarden
+ExecStart=/usr/bin/vaultwarden
+PrivateTmp=true
+WorkingDirectory=/var/lib/vaultwarden
+ReadWritePaths=/var/lib/vaultwarden
+ReadOnlyPaths=/usr/share/vaultwarden
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+[target.x86_64-unknown-linux-gnu]
+image = "ubuntu:22.04"
+pre-build = [ "apt update && apt install -y gcc git libssl-dev libsqlite3-dev libmysqlclient-dev libpq-dev pkg-config" ]

@@ -23,14 +23,19 @@ BASEDIR=$(
 BUILDDIR="$BASEDIR/build"
 WEBDIR="$BUILDDIR/bw_web"
 VAULTDIR="$BUILDDIR/vaultwarden"
+PATCH_NAMES=$(find "$BASEDIR/patches" -maxdepth 1 -type f -name "*.diff" -exec basename "{}" \;)
 
 git clone https://github.com/dani-garcia/bw_web_builds.git "$WEBDIR" || git -C "$WEBDIR" pull
 pushd "$WEBDIR"
-    cp "$BASEDIR/12-length-password.diff" ./patches
+    cp "$BASEDIR"/patches/*.diff ./patches
 
     ./scripts/checkout_web_vault.sh
     ./scripts/patch_web_vault.sh
-    PATCH_NAME="12-length-password.diff" ./scripts/patch_web_vault.sh
+
+    for patch_name in $PATCH_NAMES; do
+    PATCH_NAME="$patch_name" ./scripts/patch_web_vault.sh
+    done
+
     ./scripts/build_web_vault.sh
 popd
 

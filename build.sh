@@ -1,7 +1,7 @@
 #!/bin/bash
 set -exo pipefail
 
-export VAULT_VERSION="v2024.1.2"
+export VAULT_VERSION="v2025.5.0"
 
 VAULT_GIT_VERSION="main"
 VAULT_SERVER_VERSION="$VAULT_GIT_VERSION"
@@ -23,17 +23,15 @@ BASEDIR=$(
 BUILDDIR="$BASEDIR/build"
 WEBDIR="$BUILDDIR/bw_web"
 VAULTDIR="$BUILDDIR/vaultwarden"
-PATCH_NAMES=$(find "$BASEDIR/patches" -maxdepth 1 -type f -name "*.diff" -exec basename "{}" \;)
+PATCHES=$(find "$BASEDIR/patches" -maxdepth 1 -type f -name "*.diff")
 
 git clone https://github.com/dani-garcia/bw_web_builds.git "$WEBDIR" || git -C "$WEBDIR" pull
 pushd "$WEBDIR"
-    cp "$BASEDIR"/patches/*.diff ./patches
-
+    . ./scripts/.script_env
     ./scripts/checkout_web_vault.sh
-    ./scripts/patch_web_vault.sh
 
-    for patch_name in $PATCH_NAMES; do
-    PATCH_NAME="$patch_name" ./scripts/patch_web_vault.sh
+    for patch in $PATCHES; do
+        git -C "$VAULT_FOLDER" apply "$patch"
     done
 
     ./scripts/build_web_vault.sh

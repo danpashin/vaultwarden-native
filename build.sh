@@ -1,7 +1,8 @@
 #!/bin/bash
 set -exo pipefail
 
-export VAULT_VERSION="v2025.5.0"
+#export VAULT_VERSION="v2026.1.1"
+export VAULT_VERSION="v2026.1.1+0"
 
 VAULT_GIT_VERSION="main"
 VAULT_SERVER_VERSION="$VAULT_GIT_VERSION"
